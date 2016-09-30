@@ -1,0 +1,38 @@
+	public float horizontalCamMovement, verticalCamMovement, playerPosOffSetAmount, cameraMaxDistance, cameraSpeed;
+	public bool targetOn;
+
+	private GameObject player, playerCameraOffSet;
+	private Vector3 relativePosition, relativePositionRight, playerPosOffSet, cameraPositionOffSetX, cameraPositionOffSetY, cameraPositionOffset;
+
+	void Start () {
+		targetOn = false;
+		player = GameObject.Find ("player");
+		foreach (Transform playerChild in player.GetComponent<Transform>()) {
+			if (playerChild.name == "player_camera_offset") {
+				playerCameraOffSet = playerChild.gameObject;
+			}
+		}
+
+
+	}
+
+	void LateUpdate () {
+
+		playerPosOffSet = playerCameraOffSet.transform.position;
+
+		if (!targetOn) 
+		{
+			transform.LookAt (playerPosOffSet);
+		}
+
+
+		relativePosition = player.transform.position - this.transform.position;
+		relativePositionRight = Vector3.Cross (relativePosition, Vector3.up);
+
+
+
+
+		transform.RotateAround (playerPosOffSet, Vector3.up, horizontalCamMovement * Input.GetAxis ("Mouse X") * Time.deltaTime);
+		transform.RotateAround (playerPosOffSet, relativePositionRight.normalized, verticalCamMovement * Input.GetAxis ("Mouse Y") * Time.deltaTime);
+
+	}
